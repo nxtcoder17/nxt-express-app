@@ -1,21 +1,21 @@
-import Express from 'express';
+import express from 'express';
 import expressPinoLogger from 'express-pino-logger';
 import helmet from 'helmet';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import 'fastest-validator';
-
 import { StatusCodes } from 'http-status-codes';
 import createError from 'http-errors-lite';
 import { getLogger } from '#commons/logger';
+import envConfig from "./config";
 
-const logger = getLogger("somethings");
+const logger = getLogger("app.js");
 
 export const getAnApp = () => {
-  const app = Express();
+  const app = express();
   app.use(
     cors({
-      origin: process.env.FRONTEND_URL,
+      origin: new RegExp(envConfig.CORS_REGEX),
       credentials: true,
     })
   );
@@ -30,7 +30,7 @@ export const getAnApp = () => {
           req: (req) => ({
             method: req.method,
             url: req.url,
-            body: req.body,
+            body: req.raw.body,
           }),
           res: (res) => ({
             statusCode: res.statusCode,
@@ -40,12 +40,12 @@ export const getAnApp = () => {
       })
     );
 
-  app.use(Express.json());
+  app.use(express.json());
   return app;
 };
 
 const notFoundHandler = (req, res, next) => {
-  next(createError(StatusCodes.NOT_FOUND));
+  next(createError(StatusCodes.NOT_FOUND, `${req.originalUrl} not found`));
 };
 
 const isGoodError = (error) => error.statusCode <= 404;

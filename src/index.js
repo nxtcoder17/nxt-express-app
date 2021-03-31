@@ -2,8 +2,9 @@ import { StatusCodes } from 'http-status-codes';
 import { finishApp, getAnApp } from '#app';
 import { getLogger } from '#commons/logger';
 import loadModules from './modules';
+import envConfig from "./config";
 
-const logger = getLogger(__dirname);
+const logger = getLogger("src/index.js");
 
 const app = getAnApp();
 
@@ -18,10 +19,9 @@ app.get('/healthy', (req, res) => {
 
 (async () => {
   try {
-    await app.listen(Number(process.env.PORT));
-    logger.info(`API Server started @ ${process.env.PORT}`);
+    app.listen(Number(envConfig.PORT));
+    logger.info(`API Server started @ ${envConfig.PORT}`);
   } catch (err) {
     logger.error(err);
-    process.exit(1);
   }
 })();

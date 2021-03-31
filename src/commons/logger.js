@@ -5,7 +5,6 @@ export const getLogger = (source) => {
         level: 'debug',
         prettyPrint: {
             colorize: true,
-            // levelFirst: true,
             translateTime: 'SYS:HH:MM:ss dd-mm-yyyy',
             ignore: 'pid,hostname',
         },

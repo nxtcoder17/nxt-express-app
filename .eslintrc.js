@@ -2,6 +2,12 @@ const path = require('path');
 
 module.exports = {
   extends: ['eslint-config-madhouselabs'],
+  parserOptions: {
+    requireConfigFile: true,
+    babelOptions: {
+      configFile: './babel.config.js',
+    },
+  },
   plugins: ['jest'],
   env: {
     jest: true,
